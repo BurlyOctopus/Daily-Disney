@@ -6,5 +6,7 @@
   "chrome_url_overrides": {
     "newtab": "blank.html"
   },
+  "content_security_policy": "script-src 'self' https://api.flickr.com/; object-src 'self'",
   "manifest_version": 2
+
 }
