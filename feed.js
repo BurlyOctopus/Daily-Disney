@@ -1,18 +1,24 @@
-function getPicture(the_user_id, your_div_id){
-		var apiKey = "2a8606045cc0cd8dcda41e5ffd2947f2"; // replace this with your API key
 
+function randomUser(userArray){
+  console.log(userArray);
+  return userArray[Math.floor(Math.random()*userArray.length)];
+}
+function getPicture(the_group_id, your_div_class){
+		var apiKey = "2a8606045cc0cd8dcda41e5ffd2947f2"; // replace this with your API key
+    var favoredUsers = ['49679809@N07','92238955@N06','91534967@N00'];
+    var currentUserId = randomUser(favoredUsers);
 		var url_to_a_photo_head = "https://api.flickr.com/services/rest/?method=flickr.groups.pools.getPhotos&api_key="+apiKey+"&photo_id=";
 
 		var url_to_a_photo_tail = "&format=json&jsoncallback=?";
-
+    console.log(currentUserId);
 		// get an array of random photos
 		$.getJSON(
 			"https://api.flickr.com/services/rest/",
 			{
 				method: 'flickr.groups.pools.getPhotos',
 				api_key: apiKey,
-				group_id : the_user_id,
-				user_id : '49679809@N07',
+				group_id : the_group_id,
+				user_id : currentUserId,
 				format: 'json',
 				nojsoncallback: 1,
 				per_page: 100 // you can increase this to get a bigger array
@@ -39,7 +45,7 @@ function getPicture(the_user_id, your_div_id){
 							if(response.stat == 'ok'){
 								var the_url = response.sizes.size[9].source;
                 console.log(the_url);
-								$('body').append('<img src="' + the_url + '" />');
+								$('.'+your_div_class).append('<img src="' + the_url + '" />');
 							}
 							else{
 								console.log(" The request to get the picture was not good :\ ")
@@ -55,4 +61,4 @@ function getPicture(the_user_id, your_div_id){
 		);
 	};
 
-getPicture('34741466@N00', 'body');
+getPicture('34741466@N00', 'imageWrapper');
