@@ -6,6 +6,7 @@
 body{
   background-color: #ebebeb;
   margin: 0;
+  font-family: 'Oswald', sans-serif;
 }
 img{
   width: 100%;
@@ -137,6 +138,26 @@ h1 .text{
     transform: rotate(450deg);
   }
 }
+.chooseDate {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+.chooseDate form{
+  padding: 20px;
+  background: rgba(235, 235, 235, 0.7);
+}
+.chooseDate input{
+  font-family: sans-serif;
+  display: block;
+  width: 100%;
+}
 
 </style>
 </head>
@@ -148,8 +169,13 @@ h1 .text{
   </div>
   <div class="loader">
     <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
-   <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
-</svg>
+       <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+    </svg>
   </div>
-  <img class="hiddenImage" />
+  <div class="chooseDate">
+    <form>
+      <input type="date" name="tripDate">
+      <input type="submit">
+    </form>
+  </div>
 </body>
