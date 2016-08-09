@@ -21,10 +21,10 @@ function getTimeRemaining(endtime){
 
 function getPicture(the_group_id, your_div_class){
 		var apiKey = "2a8606045cc0cd8dcda41e5ffd2947f2"; // replace this with your API key
-    var favoredUsers = ['49679809@N07','92238955@N06','91534967@N00','23720661@N08'];
+    var favoredUsers = ['49679809@N07','92238955@N06','91534967@N00','23720661@N08','142517151@N04','127603224@N06','103004167@N03'];
     var currentUserId = randomUser(favoredUsers);
 		var url_to_a_photo_head = "https://api.flickr.com/services/rest/?method=flickr.groups.pools.getPhotos&api_key="+apiKey+"&photo_id=";
-
+    console.log(currentUserId);
 		var url_to_a_photo_tail = "&format=json&jsoncallback=?";
 		// get an array of random photos
 		$.getJSON(
@@ -33,8 +33,8 @@ function getPicture(the_group_id, your_div_class){
 				method: 'flickr.groups.pools.getPhotos',
 				api_key: apiKey,
 				group_id : the_group_id,
-				// user_id : currentUserId,
-				user_id : '49679809@N07',
+				user_id : currentUserId,
+				// user_id : '49679809@N07',
 				format: 'json',
 				nojsoncallback: 1,
 				per_page: 200 // you can increase this to get a bigger array
@@ -91,25 +91,28 @@ function getPicture(the_group_id, your_div_class){
 			}
 		);
 	};
+  function noNumberFunction(){
+    $('.countDownDate').addClass('noNumber');
+    $('.chooseDateBtn').click(function(event) {
+      $('.chooseDate').addClass('active');
+    });
+  }
+  function setDateFunction(endDate){
+    $('.countDownDate .number').text(endDate.days);
+    $('.countDownDate').removeClass('noNumber');
+    $('.chooseDate').removeClass('active');
+  }
 
 $(function() {
+
   getPicture('34741466@N00', 'imageWrapper');
-  // Save it using the Chrome extension storage API.
-  // chrome.storage.local.clear(function() {
-  //   var error = chrome.runtime.lastError;
-  //   if (error) {
-  //       console.error(error);
-  //   }
-  // });
-  // chrome.storage.local.set({'countdownDate': '2014-9-9'}, function() {
-  //   console.log('Settings Saved');
-  // });
-  // Read it using the storage API
+
 
   chrome.storage.local.get(['countdownDate'], function(items) {
     console.log(items.countdownDate);
     if(items.countdownDate == null){
       console.log('No Number Saved');
+      noNumberFunction();
     } else {
       console.log('Settings retrieved', items);
       var endDate = getTimeRemaining(items.countdownDate);
@@ -119,6 +122,7 @@ $(function() {
         $('.countDownDate .number').text(endDate.days);
       } else {
         console.log('Choose New number');
+        noNumberFunction();
         chrome.storage.local.clear(function() {
           var error = chrome.runtime.lastError;
           if (error) {
@@ -129,13 +133,13 @@ $(function() {
     }
   });
 
-  $('.chooseDate input[type=submit]').click(function(event) {
+  $('.submitBtn').click(function(event) {
     event.preventDefault();
     var newNumber = $('input[name="tripDate"]').val();
-    var endDate = getTimeRemaining(newNumber); 
+    var endDate = getTimeRemaining(newNumber);
     chrome.storage.local.set({'countdownDate': newNumber}, function() {
       console.log('Settings Saved');
-      $('.countDownDate .number').text(endDate.days);
     });
+    setDateFunction(endDate);
   });
 });
