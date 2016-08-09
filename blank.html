@@ -2,11 +2,11 @@
 <script src="jquery-3.1.0.min.js"></script>
 <script src="feed.js"></script>
 <style>
-@import url(https://fonts.googleapis.com/css?family=Oswald:400,700);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,800);
 body{
   background-color: #ebebeb;
   margin: 0;
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Open Sans', sans-serif;
 }
 img{
   width: 100%;
@@ -21,18 +21,37 @@ img{
   position: absolute;
   top: 40px;
   left: 40px;
-  z-index: 100;
+  z-index: 101;
 }
-h1{
+.countDownDate h1{
   font-size: 100px;
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-family: 700;
   text-shadow: 1px 1px 10px #000;
   color: #fff;
   margin: 0;
 }
-h1 .text{
+.countDownDate h1 .text{
   font-size: 50px;
+}
+.countDownDate.noNumber h1{
+  display: none;
+}
+.countDownDate .chooseDateBtn{
+  width: 200px;
+  font-size: 25px;
+  text-align: center;
+  padding: .5em 1em;
+  border: 1px solid #ffffff;
+  display: none;
+  color: #fff;
+  cursor: pointer;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 10px #000;
+text-shadow: 0px 0px 10px #000;
+}
+.countDownDate.noNumber .chooseDateBtn{
+  display: block;
 }
 .smallImage{
   position: absolute;
@@ -139,24 +158,41 @@ h1 .text{
   }
 }
 .chooseDate {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 200px;
+  font-size: 25px;
+  text-align: center;
+  margin-top: 10vh;
+  box-sizing: border-box;
+  opacity: 0;
+  transition: all ease .5s;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.chooseDate.active{
+  opacity: 1;
+  transition: all ease .5s;
+  transform: translateY(0);
+  pointer-events: all;
 }
 .chooseDate form{
-  padding: 20px;
-  background: rgba(235, 235, 235, 0.7);
+
 }
 .chooseDate input{
   font-family: sans-serif;
-  display: block;
   width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+}
+.submitBtn {
+  margin-top: 10px;
+  background: #fff;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 </style>
@@ -164,6 +200,13 @@ h1 .text{
 <body>
   <div class="countDownDate">
     <h1><span class="number"></span> <span class="text">Days</span></h1>
+    <div class="chooseDateBtn">Choose your trip date</div>
+    <div class="chooseDate">
+      <form>
+        <input type="date" name="tripDate">
+        <div class="submitBtn">Apply Date</div>
+      </form>
+    </div>
   </div>
   <div class="imageWrapper">
   </div>
@@ -171,11 +214,5 @@ h1 .text{
     <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
        <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
     </svg>
-  </div>
-  <div class="chooseDate">
-    <form>
-      <input type="date" name="tripDate">
-      <input type="submit">
-    </form>
   </div>
 </body>

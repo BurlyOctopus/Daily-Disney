@@ -91,8 +91,15 @@ function getPicture(the_group_id, your_div_class){
 			}
 		);
 	};
+  function noNumberFunction(){
+    $('.countDownDate').addClass('noNumber');
+    $('.chooseDateBtn').click(function(event) {
+      $('.chooseDate').addClass('active');
+    });
+  }
 
 $(function() {
+
   getPicture('34741466@N00', 'imageWrapper');
   // Save it using the Chrome extension storage API.
   // chrome.storage.local.clear(function() {
@@ -110,6 +117,7 @@ $(function() {
     console.log(items.countdownDate);
     if(items.countdownDate == null){
       console.log('No Number Saved');
+      noNumberFunction();
     } else {
       console.log('Settings retrieved', items);
       var endDate = getTimeRemaining(items.countdownDate);
@@ -119,6 +127,7 @@ $(function() {
         $('.countDownDate .number').text(endDate.days);
       } else {
         console.log('Choose New number');
+        noNumberFunction();
         chrome.storage.local.clear(function() {
           var error = chrome.runtime.lastError;
           if (error) {
@@ -129,10 +138,10 @@ $(function() {
     }
   });
 
-  $('.chooseDate input[type=submit]').click(function(event) {
+  $('.submitBtn').click(function(event) {
     event.preventDefault();
     var newNumber = $('input[name="tripDate"]').val();
-    var endDate = getTimeRemaining(newNumber); 
+    var endDate = getTimeRemaining(newNumber);
     chrome.storage.local.set({'countdownDate': newNumber}, function() {
       console.log('Settings Saved');
       $('.countDownDate .number').text(endDate.days);
