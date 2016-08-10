@@ -1,6 +1,5 @@
 
 function randomUser(userArray){
-  console.log(userArray);
   return userArray[Math.floor(Math.random()*userArray.length)];
 }
 
@@ -21,10 +20,9 @@ function getTimeRemaining(endtime){
 
 function getPicture(the_group_id, your_div_class){
 		var apiKey = "2a8606045cc0cd8dcda41e5ffd2947f2"; // replace this with your API key
-    var favoredUsers = ['49679809@N07','92238955@N06','91534967@N00','23720661@N08','142517151@N04','127603224@N06','103004167@N03'];
+    var favoredUsers = ['49679809@N07','92238955@N06','91534967@N00','142517151@N04','127603224@N06','103004167@N03'];
     var currentUserId = randomUser(favoredUsers);
 		var url_to_a_photo_head = "https://api.flickr.com/services/rest/?method=flickr.groups.pools.getPhotos&api_key="+apiKey+"&photo_id=";
-    console.log(currentUserId);
 		var url_to_a_photo_tail = "&format=json&jsoncallback=?";
 		// get an array of random photos
 		$.getJSON(
@@ -40,11 +38,17 @@ function getPicture(the_group_id, your_div_class){
 				per_page: 200 // you can increase this to get a bigger array
 			},
 			function(data){
-        console.log(data);
+        // console.log(data);
 				// if everything went good
 				if(data.stat == 'ok'){
 					// get a random id from the array
+          console.log(data.photos.photo.length );
 					var photoId = data.photos.photo[ Math.floor( Math.random() * data.photos.photo.length ) ];
+          var ownerName = photoId.ownername;
+          var ownerTitle = photoId.title;
+          console.log(photoId);
+          $('.imageSource .photoTitle').text(ownerTitle);
+          $('.imageSource .photoOwner').text(ownerName);
 					// now call the flickr API and get the picture with a nice size
 					$.getJSON(
 						"https://api.flickr.com/services/rest/",
@@ -57,26 +61,33 @@ function getPicture(the_group_id, your_div_class){
 						},
 						function(response){
 							if(response.stat == 'ok'){
+                console.log(response);
 								var the_url_small = response.sizes.size[3].source;
 								var the_url_large = response.sizes.size[9].source;
-                function OnImageLoaded (img) {
-                  if(img.src == the_url_small){
-                    $('.'+your_div_class).append('<div class="smallImage" style="background-image: url(' + the_url_small + ');" />');
-                    $('.loader').addClass('finished');
-                    PreloadImage (the_url_large);
-                  } else{
-                    $('.'+your_div_class).append('<div class="largeImage" style="background-image: url(' + the_url_large + ');" />');
-                    $('.smallImage').addClass('fade');
-                  }
-            		}
-                function PreloadImage (src) {
-                  var img = new Image ();
-            			img.onload = function () {OnImageLoaded (this)};
-                  img.src = src;
-                }
+                console.log('height: '+parseInt(response.sizes.size[9].height)+' Width: '+parseInt(response.sizes.size[9].width));
+                if(parseInt(response.sizes.size[9].height) > parseInt(response.sizes.size[9].width)){
 
-            		PreloadImage (the_url_small);
-								// $('.'+your_div_class).append('<div class="smallImage" style="background-image: url(' + the_url_small + ');" />');
+                  getPicture('34741466@N00', 'imageWrapper');
+                } else {
+                  function OnImageLoaded (img) {
+                    if(img.src == the_url_small){
+                      $('.'+your_div_class).append('<div class="smallImage" style="background-image: url(' + the_url_small + ');" />');
+                      $('.loader').addClass('finished');
+                      PreloadImage (the_url_large);
+                    } else{
+                      $('.'+your_div_class).append('<div class="largeImage" style="background-image: url(' + the_url_large + ');" />');
+                      $('.smallImage').addClass('fade');
+                    }
+              		}
+                  function PreloadImage (src) {
+                    var img = new Image ();
+              			img.onload = function () {OnImageLoaded (this)};
+                    img.src = src;
+                  }
+
+              		PreloadImage (the_url_small);
+  								// $('.'+your_div_class).append('<div class="smallImage" style="background-image: url(' + the_url_small + ');" />');
+                }
 							}
 							else{
 								console.log(" The request to get the picture was not good :\ ")
@@ -109,19 +120,13 @@ $(function() {
 
 
   chrome.storage.local.get(['countdownDate'], function(items) {
-    console.log(items.countdownDate);
     if(items.countdownDate == null){
-      console.log('No Number Saved');
       noNumberFunction();
     } else {
-      console.log('Settings retrieved', items);
       var endDate = getTimeRemaining(items.countdownDate);
-      console.log(endDate.days);
       if (endDate.days > 0) {
-        console.log(endDate);
         $('.countDownDate .number').text(endDate.days);
       } else {
-        console.log('Choose New number');
         noNumberFunction();
         chrome.storage.local.clear(function() {
           var error = chrome.runtime.lastError;
@@ -138,7 +143,6 @@ $(function() {
     var newNumber = $('input[name="tripDate"]').val();
     var endDate = getTimeRemaining(newNumber);
     chrome.storage.local.set({'countdownDate': newNumber}, function() {
-      console.log('Settings Saved');
     });
     setDateFunction(endDate);
   });
